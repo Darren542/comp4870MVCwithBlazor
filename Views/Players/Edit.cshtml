@@ -1,0 +1,10 @@
+@model TeamPlayersMVC.Models.Player
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<component type="typeof(PlayerEditComponent)" param-playerId="Model.PlayerId" render-mode="ServerPrerendered" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

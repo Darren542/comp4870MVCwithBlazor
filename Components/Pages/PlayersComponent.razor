@@ -1,0 +1,61 @@
+@page "/players-component"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<PageTitle>Players</PageTitle>
+<h1>Players</h1>
+<NavLink class="btn btn-primary" href="Players/Create">Create New</NavLink>
+<QuickGrid Items="@playersQuery" Pagination="@pagination">
+    <PropertyColumn Property="@(_ => _.PlayerId)" Sortable="true" />
+    <TemplateColumn Title="Name" SortBy="@sortByName">
+        <div class="flex items-center">
+            <nobr>
+                <strong>@context.FirstName @context.LastName</strong>
+            </nobr>
+        </div>
+    </TemplateColumn>
+    <PropertyColumn Property="@(_ => _.Position)" Sortable="true" />
+    <PropertyColumn Property="@(_ => _.TeamName)" Sortable="true" title="Team Name" />
+    <PropertyColumn Property="@(_ => _.JerseyNumber)" Sortable="true" title="Jersey Number" />
+    <TemplateColumn Title="Actions">
+        <div class="flex items-center">
+            <button class="btn btn-primary" @onclick="(() => EditPlayer(context))">Edit</button>
+            <button class="btn btn-info" @onclick="(() => DetailsPlayer(context))">Details</button>
+            <button class="btn btn-danger" @onclick="(() => DeletePlayer(context))">Delete</button>
+        </div>
+    </TemplateColumn>
+</QuickGrid>
+<Paginator State="@pagination" />
+
+@code {
+    [Parameter]
+    public IEnumerable<Player> players { get; set; } = new List<Player>();
+
+    IQueryable<Player> playersQuery = Enumerable.Empty<Player>().AsQueryable();
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    GridSort<Player> sortByName = GridSort<Player>
+    .ByAscending(_ => _.FirstName).ThenAscending(_ => _.LastName);
+
+    protected override void OnInitialized()
+    {
+        playersQuery = players.AsQueryable();
+    }
+
+    void EditPlayer(Player player)
+    {
+        // Navigate to the edit page
+        NavigationManager.NavigateTo($"Players/Edit/{player.PlayerId}");
+    }
+
+    void DeletePlayer(Player player)
+    {
+        // Navigate to the delete page
+        NavigationManager.NavigateTo($"Players/Delete/{player.PlayerId}");
+    }
+
+    void DetailsPlayer(Player player)
+    {
+        // Navigate to the details page
+        NavigationManager.NavigateTo($"Players/Details/{player.PlayerId}");
+    }
+}

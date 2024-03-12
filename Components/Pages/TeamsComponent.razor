@@ -1,0 +1,36 @@
+@page "/teams-component"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<PageTitle>Teams</PageTitle>
+<h1>Teams</h1>
+<NavLink class="btn btn-success" href="Teams/Create">Create New</NavLink>
+<QuickGrid Items="@TeamsQuery" Pagination="@pagination">
+    <PropertyColumn Property="@(_ => _.TeamName)" Sortable="true" title="Team Name" />
+    <PropertyColumn Property="@(_ => _.City)" Sortable="true" />
+    <PropertyColumn Property="@(_ => _.Province)" Sortable="true" />
+    <PropertyColumn Property="@(_ => _.Country)" Sortable="true" />
+    <TemplateColumn Title="Actions">
+        <div class="flex items-center">
+            <NavLink class="btn btn-primary" href="Teams/Create">Edit</NavLink>
+            <NavLink class="btn btn-info" href="Teams/Create">Details</NavLink>
+            <NavLink class="btn btn-danger" href="Teams/Create">Delete</NavLink>
+        </div>
+    </TemplateColumn>
+</QuickGrid>
+<Paginator State="@pagination" />
+
+@code {
+    [Parameter]
+    public IEnumerable<Team> teams { get; set; } = new List<Team>();
+
+    IQueryable<Team> TeamsQuery = Enumerable.Empty<Team>().AsQueryable();
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+    GridSort<Team> sortByName = GridSort<Team>
+    .ByAscending(_ => _.TeamName);
+
+    protected override void OnInitialized()
+    {
+        TeamsQuery = teams.AsQueryable();
+    }
+}

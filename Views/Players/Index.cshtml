@@ -1,0 +1,6 @@
+@model IEnumerable<TeamPlayersMVC.Models.Player>
+
+@{
+    ViewData["Title"] = "Players";
+}
+<component type="typeof(PlayersComponent)" render-mode="ServerPrerendered" param-players="Model" />
